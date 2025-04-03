@@ -118,4 +118,63 @@ public class JdbcTests {
             }
         }
     }
+
+    @Test
+    public void testClearBatch() throws Exception {
+        try (Connection conn = JdbcTestUtil.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement pstmt = conn
+                    .prepareStatement("INSERT INTO table_main (column1, column2, column3) VALUES (?, ?, ?)")) {
+                pstmt.setString(1, "pk1");
+                pstmt.setString(2, "pk2");
+                pstmt.setString(3, "pk3");
+                pstmt.addBatch();
+
+                pstmt.clearBatch();
+                conn.rollback();
+
+                pstmt.setString(1, "pk1");
+                pstmt.setString(2, "pk3");
+                pstmt.setString(3, "pk4");
+                pstmt.addBatch();
+
+                pstmt.executeBatch();
+            }
+
+            try (PreparedStatement pstmt = conn
+                    .prepareStatement("SELECT COUNT(1) FROM table_main");
+                    ResultSet rs = pstmt.executeQuery()) {
+                assertTrue(rs.next());
+                assertEquals(1, rs.getInt(1));
+            }
+        }
+    }
+
+    @Test
+    public void testEmptyExecuteBatch() throws Exception {
+        try (Connection conn = JdbcTestUtil.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement pstmt = conn
+                    .prepareStatement("INSERT INTO table_main (column1, column2, column3) VALUES (?, ?, ?)")) {
+                pstmt.executeBatch();
+
+                pstmt.setString(1, "pk1");
+                pstmt.setString(2, "pk2");
+                pstmt.setString(3, "pk3");
+                pstmt.addBatch();
+
+                pstmt.clearBatch();
+                pstmt.executeBatch();
+            }
+
+            try (PreparedStatement pstmt = conn
+                    .prepareStatement("SELECT COUNT(1) FROM table_main");
+                    ResultSet rs = pstmt.executeQuery()) {
+                assertTrue(rs.next());
+                assertEquals(0, rs.getInt(1));
+            }
+        }
+    }
 }
