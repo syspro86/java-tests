@@ -177,4 +177,35 @@ public class JdbcTests {
             }
         }
     }
+
+    @Test
+    public void testQueryTimeout() throws Exception {
+        try (Connection conn = JdbcTestUtil.getConnection()) {
+            conn.setAutoCommit(false);
+
+            try (PreparedStatement pstmt = conn
+                    .prepareStatement("INSERT INTO table_main (column1, column2, column3) VALUES (?, ?, ?)")) {
+                for (int i = 0; i < 100; i++) {
+                    pstmt.setString(1, "pk" + i);
+                    pstmt.setString(2, "pk" + i);
+                    pstmt.setString(3, "pk" + i);
+                    pstmt.addBatch();
+                }
+                pstmt.executeBatch();
+            }
+
+            try (PreparedStatement pstmt = conn
+                    .prepareStatement("SELECT * FROM table_main");
+                    ResultSet rs = pstmt.executeQuery()) {
+                pstmt.setQueryTimeout(1);
+                // rs.next 도 queryTimeout에 포함되는가? 안됨
+                while (rs.next()) {
+                    rs.getString(1);
+                    rs.getString(2);
+                    rs.getString(3);
+                    Thread.sleep(100);
+                }
+            }
+        }
+    }
 }
