@@ -198,7 +198,9 @@ public class JdbcTests {
                     .prepareStatement("SELECT * FROM table_main");
                     ResultSet rs = pstmt.executeQuery()) {
                 pstmt.setQueryTimeout(1);
-                // rs.next 도 queryTimeout에 포함되는가? 안됨
+                // A JDBC driver must apply this limit to the execute, executeQuery and
+                // executeUpdate methods.
+                // executeQuery 실행부터 timeout 만큼 지난시간후에도 rs.next 호출이 허용되는가?
                 while (rs.next()) {
                     rs.getString(1);
                     rs.getString(2);
