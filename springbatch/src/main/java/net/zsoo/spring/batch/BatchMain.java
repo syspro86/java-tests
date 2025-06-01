@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableBatchProcessing
-@ComponentScan(basePackages = "net.zsoo.spring.batch")
+@ComponentScan(basePackages = "net.zsoo.spring")
 public class BatchMain {
     public static void main(String[] args) throws Exception {
         List<String> jobArgs = new ArrayList<>();
         // jobArgs.add("classpath:/properties/spring-batch.xml");
         jobArgs.add(BatchMain.class.getName());
-        jobArgs.add("batch1SampleJob");
+        jobArgs.add("batch2SampleJob");
         jobArgs.add("start_timestamp=" + System.currentTimeMillis());
         jobArgs.addAll(Arrays.asList(args));
 
