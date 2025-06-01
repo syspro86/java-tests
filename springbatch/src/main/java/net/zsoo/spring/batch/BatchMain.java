@@ -15,9 +15,8 @@ import org.springframework.context.annotation.Configuration;
 public class BatchMain {
     public static void main(String[] args) throws Exception {
         List<String> jobArgs = new ArrayList<>();
-        // jobArgs.add("classpath:/properties/spring-batch.xml");
         jobArgs.add(BatchMain.class.getName());
-        jobArgs.add("batch2SampleJob");
+        jobArgs.add("Batch2Sample");
         jobArgs.add("start_timestamp=" + System.currentTimeMillis());
         jobArgs.addAll(Arrays.asList(args));
 
