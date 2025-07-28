@@ -6,17 +6,18 @@ import java.util.stream.Stream;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import lombok.RequiredArgsConstructor;
-
 @RestController
-@RequiredArgsConstructor
 public class MybatisController {
 
-    private final RecordMapper mapper;
+    private final MybatisService service;
+
+    public MybatisController(MybatisService service) {
+        this.service = service;
+    }
 
     @RequestMapping(path = "/mybatis", produces = "text/html; charset=UTF-8")
     public String index() {
-        Record[] records = mapper.select();
+        Record[] records = service.getAllRecords();
         return Stream.of(records).map(r -> r.getRecordId())
                 .collect(Collectors.joining("<br>"));
     }
