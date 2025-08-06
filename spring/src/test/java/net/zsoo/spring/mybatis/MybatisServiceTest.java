@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.web.SpringJUnitWebConfig;
 
 @SpringJUnitWebConfig(locations = {
-        "classpath:properties/application-context.xml",
+        "classpath:spring/application-context.xml",
 })
 public class MybatisServiceTest {
 
