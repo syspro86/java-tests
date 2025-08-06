@@ -14,11 +14,7 @@
     <context:property-placeholder location="classpath:properties/jdbc.properties" />
 
     <context:component-scan base-package="net.zsoo.spring">
-        <context:include-filter type="annotation" expression="org.springframework.stereotype.Service" />
-        <context:include-filter type="annotation" expression="org.springframework.stereotype.Repository" />
-        <context:include-filter type="annotation" expression="org.springframework.stereotype.Configuration" />
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
-        <context:exclude-filter type="annotation" expression="org.springframework.web.bind.annotation.RestController" />
     </context:component-scan>
 
     <!-- DataSource 설정 -->
